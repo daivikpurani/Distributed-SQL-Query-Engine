@@ -1,21 +1,21 @@
-user_id,name,age,email,city,salary
-1,Alice Johnson,28,alice.johnson@email.com,New York,75000
-2,Bob Smith,35,bob.smith@email.com,San Francisco,85000
-3,Carol Davis,42,carol.davis@email.com,Chicago,92000
-4,David Wilson,29,david.wilson@email.com,Boston,68000
-5,Eve Brown,31,eve.brown@email.com,Seattle,78000
-6,Frank Miller,45,frank.miller@email.com,Austin,95000
-7,Grace Lee,26,grace.lee@email.com,Denver,72000
-8,Henry Taylor,38,henry.taylor@email.com,Miami,88000
-9,Iris Anderson,33,iris.anderson@email.com,Portland,76000
-10,Jack Moore,41,jack.moore@email.com,Las Vegas,89000
-11,Karen White,27,karen.white@email.com,Phoenix,71000
-12,Larry Harris,36,larry.harris@email.com,Atlanta,82000
-13,Mary Clark,30,mary.clark@email.com,Dallas,74000
-14,Nick Lewis,44,nick.lewis@email.com,Detroit,91000
-15,Olivia Walker,25,olivia.walker@email.com,Minneapolis,69000
-16,Paul Hall,39,paul.hall@email.com,Cleveland,86000
-17,Quinn Allen,32,quinn.allen@email.com,Tampa,77000
-18,Rachel Young,37,rachel.young@email.com,Orlando,84000
-19,Steve King,43,steve.king@email.com,San Diego,93000
-20,Tina Wright,28,tina.wright@email.com,Sacramento,73000
+user_id,name,age,city,email
+1,John Doe,28,New York,john.doe@email.com
+2,Jane Smith,32,Los Angeles,jane.smith@email.com
+3,Bob Johnson,25,Chicago,bob.johnson@email.com
+4,Alice Brown,29,New York,alice.brown@email.com
+5,Charlie Wilson,35,Los Angeles,charlie.wilson@email.com
+6,Diana Davis,27,Chicago,diana.davis@email.com
+7,Edward Miller,31,New York,edward.miller@email.com
+8,Fiona Garcia,26,Los Angeles,fiona.garcia@email.com
+9,George Martinez,33,Chicago,george.martinez@email.com
+10,Helen Rodriguez,30,New York,helen.rodriguez@email.com
+11,Ivan Lee,24,Los Angeles,ivan.lee@email.com
+12,Julia White,28,Chicago,julia.white@email.com
+13,Kevin Black,36,New York,kevin.black@email.com
+14,Lisa Green,29,Los Angeles,lisa.green@email.com
+15,Mike Taylor,27,Chicago,mike.taylor@email.com
+16,Nancy Anderson,34,New York,nancy.anderson@email.com
+17,Oscar Thomas,25,Los Angeles,oscar.thomas@email.com
+18,Patricia Jackson,32,Chicago,patricia.jackson@email.com
+19,Quinn Harris,28,New York,quinn.harris@email.com
+20,Rachel Martin,31,Los Angeles,rachel.martin@email.com

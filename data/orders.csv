@@ -1,21 +1,21 @@
-order_id,user_id,product_name,quantity,price,order_date,status
-1001,1,Laptop,1,1200.00,2024-01-15,completed
-1002,2,Mouse,2,25.50,2024-01-16,completed
-1003,3,Keyboard,1,75.00,2024-01-17,pending
-1004,1,Monitor,1,300.00,2024-01-18,completed
-1005,4,Headphones,1,150.00,2024-01-19,shipped
-1006,5,Tablet,1,500.00,2024-01-20,completed
-1007,2,Phone Case,3,15.00,2024-01-21,pending
-1008,6,Charger,2,30.00,2024-01-22,completed
-1009,3,Webcam,1,80.00,2024-01-23,shipped
-1010,7,Speaker,1,120.00,2024-01-24,completed
-1011,8,Laptop Stand,1,45.00,2024-01-25,pending
-1012,4,USB Cable,5,10.00,2024-01-26,completed
-1013,9,Desk Lamp,1,60.00,2024-01-27,shipped
-1014,10,Notebook,10,8.00,2024-01-28,completed
-1015,5,Pen Set,2,20.00,2024-01-29,pending
-1016,11,Backpack,1,80.00,2024-01-30,completed
-1017,12,Water Bottle,1,15.00,2024-02-01,shipped
-1018,6,Coffee Mug,2,12.00,2024-02-02,completed
-1019,13,Stapler,1,8.00,2024-02-03,pending
-1020,14,Paper Clips,100,5.00,2024-02-04,completed
+order_id,user_id,product_id,order_date,amount,status
+1,1,101,2023-01-15,29.99,completed
+2,2,102,2023-01-16,49.99,completed
+3,3,103,2023-01-17,19.99,pending
+4,1,104,2023-01-18,79.99,completed
+5,4,105,2023-01-19,39.99,completed
+6,5,106,2023-01-20,59.99,pending
+7,2,107,2023-01-21,89.99,completed
+8,6,108,2023-01-22,24.99,completed
+9,3,109,2023-01-23,69.99,pending
+10,7,110,2023-01-24,34.99,completed
+11,8,111,2023-01-25,44.99,completed
+12,4,112,2023-01-26,54.99,pending
+13,9,113,2023-01-27,64.99,completed
+14,10,114,2023-01-28,74.99,completed
+15,5,115,2023-01-29,84.99,pending
+16,11,116,2023-01-30,94.99,completed
+17,6,117,2023-01-31,14.99,completed
+18,12,118,2023-02-01,104.99,pending
+19,7,119,2023-02-02,114.99,completed
+20,13,120,2023-02-03,124.99,completed

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributed SQL Query Engine - Visualizer</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🦀 Distributed SQL Query Engine Visualizer</h1>
+            <div class="status-indicator">
+                <span id="connection-status" class="status-dot offline"></span>
+                <span id="connection-text">Connecting...</span>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <button class="nav-btn active" data-view="architecture">Architecture</button>
+            <button class="nav-btn" data-view="query-flow">Query Flow</button>
+            <button class="nav-btn" data-view="performance">Performance</button>
+            <button class="nav-btn" data-view="demo">Demo</button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Architecture View -->
+            <div id="architecture-view" class="view active">
+                <h2>System Architecture</h2>
+                <div class="architecture-container">
+                    <canvas id="architecture-canvas" width="800" height="600"></canvas>
+                </div>
+                <div class="component-details">
+                    <h3>Component Status</h3>
+                    <div id="component-list" class="component-list"></div>
+                </div>
+            </div>
+
+            <!-- Query Flow View -->
+            <div id="query-flow-view" class="view">
+                <h2>Query Execution Flow</h2>
+                <div class="query-input">
+                    <input type="text" id="query-input" placeholder="Enter SQL query..." value="SELECT name, age FROM users WHERE age > 25">
+                    <button id="execute-query">Execute Query</button>
+                </div>
+                <div class="query-flow-container">
+                    <canvas id="query-flow-canvas" width="800" height="400"></canvas>
+                </div>
+                <div class="query-results">
+                    <h3>Query Results</h3>
+                    <div id="query-results" class="results-table"></div>
+                </div>
+            </div>
+
+            <!-- Performance View -->
+            <div id="performance-view" class="view">
+                <h2>Performance Metrics</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h3>Total Queries</h3>
+                        <div class="metric-value" id="total-queries">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Average Latency</h3>
+                        <div class="metric-value" id="avg-latency">0ms</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Queries/Second</h3>
+                        <div class="metric-value" id="qps">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Error Rate</h3>
+                        <div class="metric-value" id="error-rate">0%</div>
+                    </div>
+                </div>
+                <div class="worker-utilization">
+                    <h3>Worker Utilization</h3>
+                    <div id="worker-charts" class="worker-charts"></div>
+                </div>
+            </div>
+
+            <!-- Demo View -->
+            <div id="demo-view" class="view">
+                <h2>Interactive Demo</h2>
+                <div class="demo-container">
+                    <div class="demo-sidebar">
+                        <h3>Sample Queries</h3>
+                        <div class="sample-queries">
+                            <button class="sample-query" data-query="SELECT name FROM users">Simple SELECT</button>
+                            <button class="sample-query" data-query="SELECT name, age FROM users WHERE age > 30">Filtered Query</button>
+                            <button class="sample-query" data-query="SELECT u.name, o.product_name FROM users u JOIN orders o ON u.user_id = o.user_id">JOIN Query</button>
+                        </div>
+                        <div class="demo-controls">
+                            <button id="start-demo">Start Demo</button>
+                            <button id="stop-demo">Stop Demo</button>
+                        </div>
+                    </div>
+                    <div class="demo-main">
+                        <canvas id="demo-canvas" width="600" height="400"></canvas>
+                        <div class="demo-info">
+                            <h3>Demo Information</h3>
+                            <div id="demo-info-content">Click "Start Demo" to begin the interactive demonstration.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built with Rust 🦀 | Real-time Distributed SQL Query Engine Visualization</p>
+        </footer>
+    </div>
+
+    <script src="static/js/app.js"></script>
+</body>
+</html>

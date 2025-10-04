@@ -1,0 +1,205 @@
+warning: unused import: `super::Row`
+ --> common/src/models/condition.rs:4:5
+  |
+4 | use super::Row;
+  |     ^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: ambiguous glob re-exports
+  --> common/src/models/mod.rs:14:9
+   |
+14 | pub use condition::*;
+   |         ^^^^^^^^^^^^ the name `DataType` in the type namespace is first re-exported here
+...
+21 | pub use shard_key::*;
+   |         ------------ but the name `DataType` in the type namespace is also re-exported here
+   |
+   = note: `#[warn(ambiguous_glob_reexports)]` on by default
+
+warning: ambiguous glob re-exports
+  --> common/src/models/mod.rs:20:9
+   |
+20 | pub use shard_info::*;
+   |         ^^^^^^^^^^^^^ the name `ShardType` in the type namespace is first re-exported here
+21 | pub use shard_key::*;
+22 | pub use shard_distribution::*;
+   |         --------------------- but the name `ShardType` in the type namespace is also re-exported here
+
+warning: unused doc comment
+   --> common/src/utils/tracer.rs:121:1
+    |
+121 | /// Global tracer instance
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+    = note: `#[warn(unused_doc_comments)]` on by default
+
+warning: ambiguous glob re-exports
+  --> common/src/lib.rs:11:9
+   |
+11 | pub use models::*;
+   |         ^^^^^^^^^ the name `Condition` in the type namespace is first re-exported here
+12 | pub use proto::*;
+   |         -------- but the name `Condition` in the type namespace is also re-exported here
+
+warning: ambiguous glob re-exports
+  --> common/src/lib.rs:11:9
+   |
+11 | pub use models::*;
+   |         ^^^^^^^^^ the name `Operator` in the type namespace is first re-exported here
+12 | pub use proto::*;
+   |         -------- but the name `Operator` in the type namespace is also re-exported here
+
+warning: ambiguous glob re-exports
+  --> common/src/lib.rs:11:9
+   |
+11 | pub use models::*;
+   |         ^^^^^^^^^ the name `DataType` in the type namespace is first re-exported here
+12 | pub use proto::*;
+   |         -------- but the name `DataType` in the type namespace is also re-exported here
+
+warning: ambiguous glob re-exports
+  --> common/src/lib.rs:11:9
+   |
+11 | pub use models::*;
+   |         ^^^^^^^^^ the name `PlanNode` in the type namespace is first re-exported here
+12 | pub use proto::*;
+   |         -------- but the name `PlanNode` in the type namespace is also re-exported here
+
+warning: ambiguous glob re-exports
+  --> common/src/lib.rs:11:9
+   |
+11 | pub use models::*;
+   |         ^^^^^^^^^ the name `NodeType` in the type namespace is first re-exported here
+12 | pub use proto::*;
+   |         -------- but the name `NodeType` in the type namespace is also re-exported here
+
+warning: ambiguous glob re-exports
+  --> common/src/lib.rs:11:9
+   |
+11 | pub use models::*;
+   |         ^^^^^^^^^ the name `Row` in the type namespace is first re-exported here
+12 | pub use proto::*;
+   |         -------- but the name `Row` in the type namespace is also re-exported here
+
+warning: unused variable: `ranges_str`
+   --> common/src/models/shard_distribution.rs:114:21
+    |
+114 |         if let Some(ranges_str) = self.get_parameter("ranges") {
+    |                     ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_ranges_str`
+    |
+    = note: `#[warn(unused_variables)]` on by default
+
+warning: `common` (lib) generated 11 warnings (run `cargo fix --lib -p common` to apply 1 suggestion)
+warning: unused import: `std::collections::HashMap`
+ --> worker/src/main.rs:1:5
+  |
+1 | use std::collections::HashMap;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: unused imports: `Request`, `Response`, and `Status`
+ --> worker/src/main.rs:4:32
+  |
+4 | use tonic::{transport::Server, Request, Response, Status};
+  |                                ^^^^^^^  ^^^^^^^^  ^^^^^^
+
+warning: unused imports: `error` and `warn`
+ --> worker/src/main.rs:5:21
+  |
+5 | use tracing::{info, error, warn, debug};
+  |                     ^^^^^  ^^^^
+
+warning: unused import: `QueryResult`
+ --> worker/src/worker_service.rs:5:26
+  |
+5 | use crate::{WorkerState, QueryResult};
+  |                          ^^^^^^^^^^^
+
+warning: unused import: `std::collections::HashMap`
+ --> worker/src/query_executor.rs:1:5
+  |
+1 | use std::collections::HashMap;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `warn`
+ --> worker/src/query_executor.rs:2:28
+  |
+2 | use tracing::{info, debug, warn};
+  |                            ^^^^
+
+warning: unused imports: `debug` and `info`
+ --> worker/src/data_store.rs:2:15
+  |
+2 | use tracing::{info, debug};
+  |               ^^^^  ^^^^^
+
+warning: unused import: `common::proto::worker_service_server::WorkerService`
+  --> worker/src/main.rs:14:5
+   |
+14 | use common::proto::worker_service_server::WorkerService;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused variable: `metrics`
+   --> worker/src/worker_service.rs:105:13
+    |
+105 |         let metrics = self.state.get_metrics().await;
+    |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_metrics`
+    |
+    = note: `#[warn(unused_variables)]` on by default
+
+warning: variable `data_dir` is assigned to, but never used
+   --> worker/src/main.rs:138:13
+    |
+138 |     let mut data_dir = "data".to_string();
+    |             ^^^^^^^^
+    |
+    = note: consider using `_data_dir` instead
+
+warning: value assigned to `data_dir` is never read
+   --> worker/src/main.rs:162:21
+    |
+162 |                     data_dir = args[i + 1].clone();
+    |                     ^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+    = note: `#[warn(unused_assignments)]` on by default
+
+warning: `worker` (bin "worker") generated 11 warnings (run `cargo fix --bin "worker"` to apply 8 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+     Running `target/debug/worker --worker-id worker2 --port 50053 --data-dir data`
+2025-10-04T18:17:44.756571Z  INFO worker: Starting Worker worker2 on port 50053
+2025-10-04T18:17:44.763007Z  INFO worker: Worker worker2 server listening on 127.0.0.1:50053
+2025-10-04T18:17:44.764278Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=64MB, Active=0
+2025-10-04T18:17:54.765512Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=74MB, Active=0
+2025-10-04T18:18:04.764882Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=54MB, Active=0
+2025-10-04T18:18:14.765337Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=64MB, Active=0
+2025-10-04T18:18:24.764707Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=74MB, Active=0
+2025-10-04T18:18:34.765114Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=54MB, Active=0
+2025-10-04T18:18:44.764069Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=64MB, Active=0
+2025-10-04T18:18:54.763765Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=74MB, Active=0
+2025-10-04T18:19:04.765146Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=54MB, Active=0
+2025-10-04T18:19:14.765009Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=64MB, Active=0
+2025-10-04T18:19:24.764452Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=74MB, Active=0
+2025-10-04T18:19:34.764712Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=54MB, Active=0
+2025-10-04T18:19:44.764572Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=64MB, Active=0
+2025-10-04T18:19:54.763355Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=74MB, Active=0
+2025-10-04T18:20:04.764490Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=54MB, Active=0
+2025-10-04T18:20:14.763923Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=64MB, Active=0
+2025-10-04T18:20:24.763655Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=74MB, Active=0
+2025-10-04T18:20:34.763612Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=54MB, Active=0
+2025-10-04T18:20:44.764114Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=64MB, Active=0
+2025-10-04T18:20:54.764311Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=74MB, Active=0
+2025-10-04T18:21:04.763352Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=54MB, Active=0
+2025-10-04T18:21:14.763463Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=64MB, Active=0
+2025-10-04T18:21:24.763954Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=74MB, Active=0
+2025-10-04T18:21:34.763023Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=54MB, Active=0
+2025-10-04T18:21:44.762937Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=64MB, Active=0
+2025-10-04T18:21:54.763112Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=74MB, Active=0
+2025-10-04T18:22:04.763159Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=54MB, Active=0
+2025-10-04T18:22:14.763228Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=64MB, Active=0
+2025-10-04T18:22:24.763265Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=74MB, Active=0
+2025-10-04T18:22:34.763318Z DEBUG worker: Worker worker2 heartbeat: CPU=34%, Memory=54MB, Active=0
+2025-10-04T18:22:44.762363Z DEBUG worker: Worker worker2 heartbeat: CPU=24%, Memory=64MB, Active=0

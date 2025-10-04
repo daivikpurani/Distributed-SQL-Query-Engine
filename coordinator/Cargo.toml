@@ -1,0 +1,37 @@
+[package]
+name = "coordinator"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Coordinator service for the distributed SQL engine"
+
+[[bin]]
+name = "coordinator"
+path = "src/main.rs"
+
+[dependencies]
+# Workspace dependencies
+tokio.workspace = true
+tonic.workspace = true
+prost.workspace = true
+prost-types.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+nom.workspace = true
+csv.workspace = true
+uuid.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+chrono.workspace = true
+dashmap.workspace = true
+futures.workspace = true
+
+# Local dependencies
+common = { path = "../common" }
+
+# Additional dependencies
+async-trait = "0.1"
+bytes = "1.5"

@@ -1,0 +1,47 @@
+{
+  "recommendations": [
+    // Essential Java Development
+    "redhat.java",
+    "vscjava.vscode-java-debug",
+    "vscjava.vscode-java-test",
+    "vscjava.vscode-maven",
+    "vscjava.vscode-java-dependency",
+    
+    // Protocol Buffers Support
+    "zxh404.vscode-proto3",
+    
+    // Code Quality & Formatting
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-json",
+    
+    // Git Integration
+    "eamodio.gitlens",
+    
+    // General Development Tools
+    "ms-vscode.vscode-typescript-next",
+    "bradlc.vscode-tailwindcss",
+    
+    // Documentation & Markdown
+    "yzhang.markdown-all-in-one",
+    
+    // Terminal & Shell
+    "ms-vscode.powershell",
+    
+    // Database Tools (for SQL development)
+    "ms-mssql.mssql",
+    
+    // Additional Java Tools
+    "gabrielbb.vscode-lombok",
+    "vscjava.vscode-gradle",
+    
+    // Code Navigation & Productivity
+    "ms-vscode.vscode-json",
+    "ms-vscode.hexeditor",
+    
+    // Remote Development (if needed)
+    "ms-vscode-remote.remote-containers"
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.vscode-typescript"
+  ]
+}
