@@ -1,34 +1,34 @@
-# 🦀 Distributed SQL Query Engine - Web Visualizer
+# Distributed SQL Query Engine - Web Visualizer
 
 A comprehensive web-based visualization tool for the Distributed SQL Query Engine built in Rust. This visualizer provides real-time monitoring, interactive demonstrations, and educational visualizations of distributed systems concepts.
 
-## 🎯 Features
+## Features
 
-### 🏗️ System Architecture Dashboard
+### System Architecture Dashboard
 - **Real-time Component Status**: Live health monitoring of coordinator and workers
 - **Interactive Network Diagram**: Click to explore system components
 - **gRPC Connection Visualization**: Visual representation of inter-component communication
 - **Component Metrics**: CPU usage, memory consumption, and active connections
 
-### 🔄 Query Execution Flow
+### Query Execution Flow
 - **Step-by-Step Animation**: Visual representation of SQL query processing
 - **Real-time Progress Tracking**: See queries move through parsing, planning, and execution phases
 - **Performance Metrics**: Execution time, rows processed, and system load
 - **Interactive Query Interface**: Execute queries and see results in real-time
 
-### 📊 Performance Monitoring
+### Performance Monitoring
 - **Real-time Metrics**: Query throughput, latency, and error rates
 - **Worker Utilization**: CPU and memory usage per worker node
 - **Historical Trends**: Performance data over time
 - **System Health**: Overall system status and component health
 
-### 🎮 Interactive Demo
+### Interactive Demo
 - **Live Demonstrations**: Interactive examples of distributed query processing
 - **Educational Mode**: Step-by-step explanations of system behavior
 - **Sample Queries**: Pre-built examples showcasing different SQL operations
 - **Visual Learning**: Understand distributed systems concepts through visualization
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Rust 1.70+ installed
@@ -63,7 +63,7 @@ RUST_LOG=debug cargo run --bin visualizer
 cargo run --bin visualizer -- --port 8081
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 ### Backend (Rust)
 - **Web Server**: Built with `warp` for high-performance HTTP/WebSocket serving
@@ -82,7 +82,7 @@ cargo run --bin visualizer -- --port 8081
 Browser ←→ WebSocket ←→ Visualizer Server ←→ gRPC ←→ Coordinator/Workers
 ```
 
-## 📱 User Interface
+## User Interface
 
 ### Navigation
 - **Architecture View**: System component relationships and status
@@ -96,7 +96,7 @@ Browser ←→ WebSocket ←→ Visualizer Server ←→ gRPC ←→ Coordinator
 - **Auto-reconnection**: Automatic reconnection on connection loss
 - **Error Handling**: Graceful degradation when services are unavailable
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 ```bash
@@ -117,7 +117,7 @@ The visualizer automatically connects to:
 - **Worker 2**: `http://localhost:50053`
 - **Worker 3**: `http://localhost:50054`
 
-## 📊 Visualization Types
+## Visualization Types
 
 ### 1. System Architecture
 - **Component Diagram**: Visual representation of system components
@@ -143,7 +143,7 @@ The visualizer automatically connects to:
 - **Educational Content**: Explanations of distributed systems concepts
 - **Custom Queries**: Execute your own SQL queries
 
-## 🎯 Demo Scenarios
+## Demo Scenarios
 
 ### Scenario 1: System Overview (30 seconds)
 1. Show architecture diagram with live component status
@@ -163,7 +163,7 @@ The visualizer automatically connects to:
 3. Explain monitoring capabilities
 4. Show system health indicators
 
-## 🛠️ Development
+## Development
 
 ### Project Structure
 ```
@@ -197,7 +197,7 @@ cargo test -- --nocapture
 cargo test --test integration_tests
 ```
 
-## 🚀 Deployment
+## Deployment
 
 ### Local Development
 ```bash
@@ -236,7 +236,7 @@ EXPOSE 8080
 CMD ["./target/release/visualizer"]
 ```
 
-## 📈 Performance
+## Performance
 
 ### Backend Performance
 - **Memory Usage**: ~50MB base memory footprint
@@ -250,7 +250,7 @@ CMD ["./target/release/visualizer"]
 - **Network**: Minimal bandwidth usage with efficient WebSocket protocol
 - **Responsiveness**: <100ms UI response time
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -278,7 +278,7 @@ RUST_LOG=debug cargo run --bin visualizer
 # Open Developer Tools → Console tab
 ```
 
-## 📚 Educational Value
+## Educational Value
 
 ### Distributed Systems Concepts
 - **Microservices Architecture**: See how components interact
@@ -298,7 +298,7 @@ RUST_LOG=debug cargo run --bin visualizer
 - **gRPC Integration**: High-performance inter-service communication
 - **Web Performance**: Efficient real-time data streaming
 
-## 🎓 Portfolio Impact
+## Portfolio Impact
 
 ### Technical Skills Demonstrated
 - **Full-Stack Development**: Rust backend + JavaScript frontend
@@ -314,7 +314,7 @@ RUST_LOG=debug cargo run --bin visualizer
 - **User Experience**: Intuitive, responsive interface
 - **Production Ready**: Deployment-ready with proper configuration
 
-## 🤝 Contributing
+## Contributing
 
 ### Development Setup
 1. Fork the repository
@@ -333,7 +333,7 @@ RUST_LOG=debug cargo run --bin visualizer
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built with Rust and the amazing Rust ecosystem
 - Inspired by distributed database systems like Presto, SparkSQL, and Snowflake
@@ -342,4 +342,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ in Rust** | **Real-time Visualization** | **Distributed Systems Excellence**
+**Built with Rust** | **Real-time Visualization** | **Distributed Systems Excellence**

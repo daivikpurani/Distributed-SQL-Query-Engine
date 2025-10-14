@@ -16,12 +16,12 @@ A high-performance distributed SQL query engine with sharding support, built wit
 
 This project implements a distributed SQL query engine that can execute SQL queries across multiple worker nodes. The system features:
 
-- **🔥 High Performance**: Leverages Rust's zero-cost abstractions and memory safety
-- **🌐 Distributed Query Processing**: Queries are parsed, planned, and executed across multiple workers
-- **📊 Data Sharding**: Automatic data distribution and sharding across worker nodes
-- **🛡️ Fault Tolerance**: Worker failure detection and recovery mechanisms
-- **⚡ gRPC Communication**: High-performance inter-node communication
-- **🔧 SQL Support**: Basic SQL operations including SELECT, JOIN, WHERE, and aggregation
+- **High Performance**: Leverages Rust's zero-cost abstractions and memory safety
+- **Distributed Query Processing**: Queries are parsed, planned, and executed across multiple workers
+- **Data Sharding**: Automatic data distribution and sharding across worker nodes
+- **Fault Tolerance**: Worker failure detection and recovery mechanisms
+- **gRPC Communication**: High-performance inter-node communication
+- **SQL Support**: Basic SQL operations including SELECT, JOIN, WHERE, and aggregation
 
 ## Architecture
 
@@ -49,29 +49,29 @@ The system consists of three main components:
 
 ### Core Features
 
-- ✅ SQL Query Parsing (SELECT, JOIN, WHERE, GROUP BY)
-- ✅ Distributed Query Planning
-- ✅ Multi-worker Query Execution
-- ✅ Data Sharding and Distribution
-- ✅ Fault Tolerance and Recovery
-- ✅ Performance Monitoring and Tracing
+- SQL Query Parsing (SELECT, JOIN, WHERE, GROUP BY)
+- Distributed Query Planning
+- Multi-worker Query Execution
+- Data Sharding and Distribution
+- Fault Tolerance and Recovery
+- Performance Monitoring and Tracing
 
 ### Sharding Features
 
-- ✅ Hash-based Data Sharding
-- ✅ Range-based Data Distribution
-- ✅ Round-robin Distribution
-- ✅ Automatic Shard Rebalancing
-- ✅ Shard Migration and Recovery
-- ✅ Worker Registration and Management
+- Hash-based Data Sharding
+- Range-based Data Distribution
+- Round-robin Distribution
+- Automatic Shard Rebalancing
+- Shard Migration and Recovery
+- Worker Registration and Management
 
 ### Query Operations
 
-- ✅ Table Scans with Column Projection
-- ✅ Filter Operations (WHERE clauses)
-- ✅ Join Operations (INNER, LEFT, RIGHT, FULL)
-- ✅ Aggregation Functions (COUNT, SUM, AVG, etc.)
-- ✅ Complex Multi-table Queries
+- Table Scans with Column Projection
+- Filter Operations (WHERE clauses)
+- Join Operations (INNER, LEFT, RIGHT, FULL)
+- Aggregation Functions (COUNT, SUM, AVG, etc.)
+- Complex Multi-table Queries
 
 ## Quick Start
 
@@ -190,4 +190,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ in Rust** | **Performance meets Safety** | **Distributed Systems Excellence**
+**Built with Rust** | **Performance meets Safety** | **Distributed Systems Excellence**
