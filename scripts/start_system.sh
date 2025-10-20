@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Distributed SQL Engine - System Startup Script
+# Distributed SQL Engine - System Startup Script (Java)
 # This script starts all components of the distributed SQL engine
 
 set -e
 
-echo "🚀 Starting Distributed SQL Engine (Rust)"
+echo "🚀 Starting Distributed SQL Engine (Java)"
 
 # Colors for output
 RED='\033[0;31m'
@@ -19,7 +19,6 @@ COORDINATOR_PORT=50051
 WORKER1_PORT=50052
 WORKER2_PORT=50053
 WORKER3_PORT=50054
-DATA_DIR="data"
 
 # Create logs directory
 mkdir -p logs
@@ -44,12 +43,12 @@ start_coordinator() {
     fi
     
     # Start coordinator in background
-    cargo run --bin coordinator -- --port $COORDINATOR_PORT > logs/coordinator.log 2>&1 &
+    mvn exec:java -pl coordinator -Dexec.mainClass="com.distributed.sql.coordinator.CoordinatorMain" -Dexec.args="$COORDINATOR_PORT" > logs/coordinator.log 2>&1 &
     COORDINATOR_PID=$!
     echo $COORDINATOR_PID > logs/coordinator.pid
     
     # Wait for coordinator to start
-    sleep 3
+    sleep 5
     
     if kill -0 $COORDINATOR_PID 2>/dev/null; then
         echo -e "${GREEN}✅ Coordinator started (PID: $COORDINATOR_PID)${NC}"
@@ -64,6 +63,7 @@ start_coordinator() {
 start_worker() {
     local worker_id=$1
     local port=$2
+    local db_name=$3
     
     echo -e "${BLUE}Starting Worker $worker_id on port $port...${NC}"
     
@@ -73,12 +73,14 @@ start_worker() {
     fi
     
     # Start worker in background
-    cargo run --bin worker -- --worker-id $worker_id --port $port --data-dir $DATA_DIR > logs/$worker_id.log 2>&1 &
+    mvn exec:java -pl worker -Dexec.mainClass="com.distributed.sql.worker.WorkerMain" \
+        -Dexec.args="--worker-id $worker_id --port $port --db-url jdbc:postgresql://localhost:5432/$db_name --db-user postgres --db-password postgres" \
+        > logs/$worker_id.log 2>&1 &
     WORKER_PID=$!
     echo $WORKER_PID > logs/$worker_id.pid
     
     # Wait for worker to start
-    sleep 2
+    sleep 3
     
     if kill -0 $WORKER_PID 2>/dev/null; then
         echo -e "${GREEN}✅ Worker $worker_id started (PID: $WORKER_PID)${NC}"
@@ -123,7 +125,7 @@ check_health() {
 # Main execution
 main() {
     echo -e "${YELLOW}Building project...${NC}"
-    cargo build --release
+    mvn clean compile -q
     
     echo -e "${YELLOW}Starting system components...${NC}"
     
@@ -131,20 +133,20 @@ main() {
     start_coordinator
     
     # Start workers
-    start_worker "worker1" $WORKER1_PORT
-    start_worker "worker2" $WORKER2_PORT
-    start_worker "worker3" $WORKER3_PORT
+    start_worker "worker1" $WORKER1_PORT "worker1_db"
+    start_worker "worker2" $WORKER2_PORT "worker2_db"
+    start_worker "worker3" $WORKER3_PORT "worker3_db"
     
     # Wait for all components to initialize
     echo -e "${YELLOW}Waiting for components to initialize...${NC}"
-    sleep 5
+    sleep 8
     
     # Check system health
     if check_health; then
         echo -e "${GREEN}🎉 System started successfully!${NC}"
         echo -e "${BLUE}Coordinator: localhost:$COORDINATOR_PORT${NC}"
         echo -e "${BLUE}Workers: localhost:$WORKER1_PORT, localhost:$WORKER2_PORT, localhost:$WORKER3_PORT${NC}"
-        echo -e "${YELLOW}Run './scripts/test_system.sh' to test the system${NC}"
+        echo -e "${YELLOW}Run 'mvn exec:java -pl client' to start the SQL client${NC}"
         echo -e "${YELLOW}Run './scripts/stop_system.sh' to stop the system${NC}"
     else
         echo -e "${RED}❌ System health check failed${NC}"

@@ -1,0 +1,282 @@
+syntax = "proto3";
+
+package distributed.sql;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+option java_package = "com.distributed.sql.common.proto";
+option java_outer_classname = "QueryProto";
+
+// Service definition for the coordinator
+service CoordinatorService {
+    rpc ExecuteQuery(ExecuteQueryRequest) returns (ExecuteQueryResponse);
+    rpc GetSystemStatus(GetSystemStatusRequest) returns (GetSystemStatusResponse);
+    rpc RegisterWorker(RegisterWorkerRequest) returns (RegisterWorkerResponse);
+    rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+}
+
+// Service definition for worker nodes
+service WorkerService {
+    rpc ExecuteQuery(ExecuteQueryRequest) returns (ExecuteQueryResponse);
+    rpc GetWorkerStatus(GetWorkerStatusRequest) returns (GetWorkerStatusResponse);
+    rpc HealthCheck(HealthRequest) returns (HealthResponse);
+}
+
+// Execute query request
+message ExecuteQueryRequest {
+    string sql_query = 1;
+    string query_id = 2;
+    google.protobuf.Timestamp timestamp = 3;
+}
+
+// Execute query response
+message ExecuteQueryResponse {
+    bool success = 1;
+    QueryResult result = 2;
+    string message = 3;
+}
+
+// Query result
+message QueryResult {
+    string query_id = 1;
+    string sql_query = 2;
+    uint64 execution_time_ms = 3;
+    uint32 rows_returned = 4;
+    repeated Row results = 5;
+    QueryStatus status = 6;
+    google.protobuf.Timestamp timestamp = 7;
+    QueryPlan plan = 8;
+}
+
+// System status request
+message GetSystemStatusRequest {
+}
+
+// System status response
+message GetSystemStatusResponse {
+    bool success = 1;
+    SystemStatus status = 2;
+    string message = 3;
+}
+
+// System status
+message SystemStatus {
+    map<string, ComponentStatus> components = 1;
+    uint64 total_queries = 2;
+    uint32 active_queries = 3;
+    google.protobuf.Duration system_uptime = 4;
+    google.protobuf.Timestamp last_updated = 5;
+}
+
+// Component status
+message ComponentStatus {
+    string id = 1;
+    string status = 2;
+    double cpu_usage = 3;
+    double memory_usage = 4;
+    uint32 active_connections = 5;
+    google.protobuf.Timestamp last_heartbeat = 6;
+}
+
+// Register worker request
+message RegisterWorkerRequest {
+    string worker_id = 1;
+    string address = 2;
+    uint32 port = 3;
+}
+
+// Register worker response
+message RegisterWorkerResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Heartbeat request
+message HeartbeatRequest {
+    string worker_id = 1;
+    double cpu_usage = 2;
+    double memory_usage = 3;
+    uint32 active_queries = 4;
+}
+
+// Heartbeat response
+message HeartbeatResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Worker status request
+message GetWorkerStatusRequest {
+}
+
+// Worker status response
+message GetWorkerStatusResponse {
+    bool success = 1;
+    WorkerStatus status = 2;
+    string message = 3;
+}
+
+// Worker status
+message WorkerStatus {
+    string worker_id = 1;
+    string status = 2;
+    double cpu_usage = 3;
+    double memory_usage = 4;
+    uint32 active_queries = 5;
+    uint64 total_queries = 6;
+    google.protobuf.Duration uptime = 7;
+    google.protobuf.Timestamp last_heartbeat = 8;
+}
+
+// Task request from coordinator to worker
+message TaskRequest {
+    string task_id = 1;
+    string query_id = 2;
+    PlanNode plan_node = 3;
+    string worker_id = 4;
+    int64 timestamp = 5;
+}
+
+// Task response from worker to coordinator
+message TaskResponse {
+    string task_id = 1;
+    string query_id = 2;
+    TaskStatus status = 3;
+    repeated Row rows = 4;
+    string error_message = 5;
+    int64 execution_time_ms = 6;
+    CheckpointInfo checkpoint = 7;
+}
+
+// Row data structure
+message Row {
+    repeated string values = 1;
+    map<string, string> metadata = 2;
+}
+
+// Query plan structure
+message QueryPlan {
+    string query_id = 1;
+    PlanNode root_node = 2;
+    repeated string worker_ids = 3;
+    int64 plan_time_ms = 4;
+}
+
+// Plan node for query execution tree
+message PlanNode {
+    NodeType type = 1;
+    string table_name = 2;
+    repeated string columns = 3;
+    repeated Condition conditions = 4;
+    repeated PlanNode children = 5;
+    string node_id = 6;
+    int32 estimated_rows = 7;
+}
+
+// Condition for WHERE clauses
+message Condition {
+    string column = 1;
+    Operator operator = 2;
+    string value = 3;
+    DataType data_type = 4;
+}
+
+// Checkpoint information
+message CheckpointInfo {
+    string checkpoint_id = 1;
+    int64 timestamp = 2;
+    repeated Row partial_results = 3;
+    string state = 4;
+}
+
+// Status and health check messages
+message StatusRequest {
+    string coordinator_id = 1;
+}
+
+message StatusResponse {
+    repeated WorkerInfo workers = 1;
+    int64 timestamp = 2;
+}
+
+message WorkerInfo {
+    string worker_id = 1;
+    WorkerStatusProto status = 2;
+    string address = 3;
+    int64 last_heartbeat = 4;
+}
+
+message HealthRequest {
+    string worker_id = 1;
+}
+
+message HealthResponse {
+    string worker_id = 1;
+    bool healthy = 2;
+    int64 timestamp = 3;
+    string status_message = 4;
+}
+
+message CheckpointRequest {
+    string checkpoint_id = 1;
+    CheckpointInfo checkpoint_data = 2;
+}
+
+message CheckpointResponse {
+    string checkpoint_id = 1;
+    bool success = 2;
+    string error_message = 3;
+}
+
+// Enums
+enum QueryStatus {
+    PENDING = 0;
+    PLANNING = 1;
+    EXECUTING = 2;
+    COMPLETED = 3;
+    FAILED = 4;
+    CANCELLED = 5;
+}
+
+enum TaskStatus {
+    TASK_PENDING = 0;
+    TASK_RUNNING = 1;
+    TASK_COMPLETED = 2;
+    TASK_FAILED = 3;
+    TASK_CANCELLED = 4;
+}
+
+enum NodeType {
+    SCAN = 0;
+    FILTER = 1;
+    JOIN = 2;
+    PROJECT = 3;
+    AGGREGATE = 4;
+}
+
+enum Operator {
+    EQUALS = 0;
+    NOT_EQUALS = 1;
+    GREATER_THAN = 2;
+    LESS_THAN = 3;
+    GREATER_THAN_EQUALS = 4;
+    LESS_THAN_EQUALS = 5;
+    LIKE = 6;
+    IN = 7;
+}
+
+enum DataType {
+    STRING = 0;
+    INTEGER = 1;
+    DOUBLE = 2;
+    BOOLEAN = 3;
+    DATE = 4;
+}
+
+enum WorkerStatusProto {
+    WORKER_IDLE = 0;
+    WORKER_BUSY = 1;
+    WORKER_FAILED = 2;
+    WORKER_UNKNOWN = 3;
+}

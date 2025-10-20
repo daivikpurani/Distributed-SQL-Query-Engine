@@ -1,0 +1,206 @@
+/* Professional PDF Styling for Project Portfolio */
+
+body {
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    margin: 40px;
+    color: #333;
+    background-color: #fff;
+}
+
+h1 {
+    color: #2c3e50;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 10px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-size: 2.2em;
+}
+
+h2 {
+    color: #34495e;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 8px;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 1.6em;
+}
+
+h3 {
+    color: #2c3e50;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.3em;
+}
+
+h4 {
+    color: #34495e;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-size: 1.1em;
+}
+
+/* Table Styling */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #2980b9;
+}
+
+td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+tr:hover {
+    background-color: #e8f4f8;
+}
+
+/* Code Styling */
+code {
+    background-color: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.9em;
+    color: #e74c3c;
+}
+
+pre {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid #3498db;
+    overflow-x: auto;
+    margin: 15px 0;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+    color: #333;
+}
+
+/* Blockquote Styling */
+blockquote {
+    border-left: 4px solid #3498db;
+    margin: 20px 0;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    font-style: italic;
+    color: #555;
+}
+
+/* List Styling */
+ul, ol {
+    margin: 15px 0;
+    padding-left: 30px;
+}
+
+li {
+    margin: 8px 0;
+}
+
+/* Link Styling */
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Horizontal Rule */
+hr {
+    border: none;
+    height: 2px;
+    background-color: #ecf0f1;
+    margin: 30px 0;
+}
+
+/* Page Break */
+.page-break {
+    page-break-before: always;
+}
+
+/* Header Styling */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* Footer Styling */
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    color: #7f8c8d;
+    font-size: 0.9em;
+}
+
+/* Emoji Styling */
+.emoji {
+    font-size: 1.2em;
+}
+
+/* Strong/Bold Text */
+strong {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* Emphasis/Italic Text */
+em {
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+/* Print-specific styles */
+@media print {
+    body {
+        margin: 20px;
+        font-size: 12pt;
+    }
+    
+    h1 {
+        font-size: 18pt;
+        page-break-after: avoid;
+    }
+    
+    h2 {
+        font-size: 16pt;
+        page-break-after: avoid;
+    }
+    
+    h3 {
+        font-size: 14pt;
+        page-break-after: avoid;
+    }
+    
+    table {
+        page-break-inside: avoid;
+    }
+    
+    pre {
+        page-break-inside: avoid;
+    }
+}

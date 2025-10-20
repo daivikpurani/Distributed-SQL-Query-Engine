@@ -1,0 +1,278 @@
+/* Professional PDF Styling - Concise Version */
+
+@page {
+    margin: 0.75in;
+    size: letter;
+}
+
+body {
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.4;
+    margin: 0;
+    color: #2c3e50;
+    background-color: #fff;
+    font-size: 11pt;
+}
+
+h1 {
+    color: #2c3e50;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 8px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    page-break-after: avoid;
+}
+
+h2 {
+    color: #34495e;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 6px;
+    margin-top: 20px;
+    margin-bottom: 12px;
+    font-size: 1.3em;
+    page-break-after: avoid;
+}
+
+h3 {
+    color: #2c3e50;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-size: 1.1em;
+    page-break-after: avoid;
+}
+
+h4 {
+    color: #34495e;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    font-size: 1.0em;
+    page-break-after: avoid;
+}
+
+/* Compact table styling */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 12px 0;
+    font-size: 10pt;
+    page-break-inside: avoid;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #2980b9;
+    font-size: 10pt;
+}
+
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    font-size: 10pt;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* Compact code styling */
+code {
+    background-color: #f4f4f4;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 9pt;
+    color: #e74c3c;
+}
+
+pre {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    border-left: 3px solid #3498db;
+    overflow-x: auto;
+    margin: 10px 0;
+    font-size: 9pt;
+    page-break-inside: avoid;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+    color: #333;
+}
+
+/* Compact list styling */
+ul, ol {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+li {
+    margin: 4px 0;
+    font-size: 10pt;
+}
+
+/* Link styling */
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Horizontal rule */
+hr {
+    border: none;
+    height: 1px;
+    background-color: #ecf0f1;
+    margin: 20px 0;
+}
+
+/* Blockquote styling */
+blockquote {
+    border-left: 3px solid #3498db;
+    margin: 10px 0;
+    padding: 8px 15px;
+    background-color: #f8f9fa;
+    font-style: italic;
+    color: #555;
+    font-size: 10pt;
+}
+
+/* Strong/Bold text */
+strong {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* Emphasis/Italic text */
+em {
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+/* Compact spacing for sections */
+.section {
+    margin-bottom: 15px;
+}
+
+/* Executive summary styling */
+.executive-summary {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border-left: 4px solid #3498db;
+}
+
+/* Key achievements styling */
+.key-achievements {
+    background-color: #e8f4f8;
+    padding: 12px;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+/* Performance metrics styling */
+.performance-metrics {
+    background-color: #f0f8ff;
+    padding: 12px;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+/* Conclusion styling */
+.conclusion {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+    border-left: 4px solid #27ae60;
+}
+
+/* Print-specific optimizations */
+@media print {
+    body {
+        margin: 0;
+        font-size: 10pt;
+        line-height: 1.3;
+    }
+    
+    h1 {
+        font-size: 16pt;
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+    
+    h2 {
+        font-size: 14pt;
+        margin-top: 15px;
+        margin-bottom: 10px;
+    }
+    
+    h3 {
+        font-size: 12pt;
+        margin-top: 12px;
+        margin-bottom: 6px;
+    }
+    
+    table {
+        font-size: 9pt;
+        margin: 8px 0;
+    }
+    
+    th, td {
+        padding: 6px;
+        font-size: 9pt;
+    }
+    
+    ul, ol {
+        margin: 6px 0;
+        padding-left: 15px;
+    }
+    
+    li {
+        margin: 2px 0;
+        font-size: 9pt;
+    }
+    
+    pre {
+        font-size: 8pt;
+        padding: 8px;
+        margin: 8px 0;
+    }
+    
+    code {
+        font-size: 8pt;
+    }
+    
+    .executive-summary,
+    .key-achievements,
+    .performance-metrics,
+    .conclusion {
+        padding: 10px;
+        margin: 8px 0;
+    }
+    
+    /* Ensure proper page breaks */
+    h1, h2, h3 {
+        page-break-after: avoid;
+    }
+    
+    table, pre {
+        page-break-inside: avoid;
+    }
+    
+    /* Reduce margins for more content */
+    @page {
+        margin: 0.5in;
+    }
+}
