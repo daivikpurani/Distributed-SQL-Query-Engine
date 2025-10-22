@@ -277,7 +277,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - Built with Java and the Spring ecosystem
-- Inspired by distributed database systems like Presto, SparkSQL, and Snowflake
+- Inspired by distributed database systems like Presto, SparkSQL, and modern cloud data platforms
 - Designed for educational and demonstration purposes
 - Special thanks to the Java and React communities for excellent tooling and libraries
 

@@ -6,7 +6,7 @@
 
 ## 📋 **Executive Summary**
 
-**Distributed SQL Query Engine** is a production-ready distributed system demonstrating advanced backend services development, microservices architecture, and customer-facing product engineering. Built entirely in Rust, it showcases the exact skills Snowflake seeks: **large-scale distributed systems**, **backend services development**, and **customer-facing product creation**.
+**Distributed SQL Query Engine** is a production-ready distributed system demonstrating advanced backend services development, microservices architecture, and customer-facing product engineering. Built entirely in Rust, it showcases essential skills for modern software engineering: **large-scale distributed systems**, **backend services development**, and **customer-facing product creation**.
 
 ### **🎯 Key Achievements**
 
@@ -115,7 +115,7 @@ graph TB
 
 ---
 
-## 🎓 **Skills Demonstrated (Snowflake Alignment)**
+## 🎓 **Skills Demonstrated**
 
 ### **Technical Skills**
 
@@ -174,9 +174,9 @@ graph TB
 
 ## 🎯 **Conclusion**
 
-This project demonstrates the exact skills Snowflake seeks in a Software Engineer: **building backend services for data platforms**, **developing customer-facing products**, and **working with large-scale distributed systems**. The system showcases proficiency in microservices architecture, gRPC communication, real-time monitoring, and full-stack development - all core requirements for Snowflake's backend services team.
+This project demonstrates the exact skills modern software engineering roles require: **building backend services for data platforms**, **developing customer-facing products**, and **working with large-scale distributed systems**. The system showcases proficiency in microservices architecture, gRPC communication, real-time monitoring, and full-stack development - all core requirements for enterprise backend services teams.
 
-**Ready to contribute to Snowflake's mission of building the world's greatest data platform.**
+**Ready to contribute to enterprise data platform development.**
 
 ---
 
