@@ -6,7 +6,7 @@
 
 ## 📋 **Executive Summary**
 
-**Distributed SQL Query Engine** is a production-ready distributed system demonstrating advanced backend services development, microservices architecture, and customer-facing product engineering. Built entirely in Rust, it showcases essential skills for modern software engineering: **large-scale distributed systems**, **backend services development**, and **customer-facing product creation**.
+**Distributed SQL Query Engine** is a production-ready distributed system demonstrating advanced backend services development, microservices architecture, and customer-facing product engineering. Built entirely in Java, it showcases essential skills for modern software engineering: **large-scale distributed systems**, **backend services development**, and **customer-facing product creation**.
 
 ### **🎯 Key Achievements**
 
@@ -55,14 +55,14 @@ graph TB
 
 ### **Core Technologies**
 
-| **Component**     | **Technology**          | **Purpose**                                     |
-| ----------------- | ----------------------- | ----------------------------------------------- |
-| **Language**      | Rust 1.70+              | Systems programming, memory safety, performance |
-| **Communication** | gRPC + Protocol Buffers | High-performance inter-service communication    |
-| **Async Runtime** | Tokio                   | Concurrent request handling                     |
-| **Web Framework** | Warp                    | HTTP server for dashboard                       |
-| **CLI Framework** | Clap                    | Command-line interface                          |
-| **Monitoring**    | Tracing                 | Structured logging and observability            |
+| **Component**     | **Technology**          | **Purpose**                                  |
+| ----------------- | ----------------------- | -------------------------------------------- |
+| **Language**      | Java 17+                | Enterprise-grade backend development         |
+| **Framework**     | Spring Boot 3.2         | Microservices and web application framework  |
+| **Communication** | gRPC + Protocol Buffers | High-performance inter-service communication |
+| **Web Framework** | React 18 + TypeScript   | HTTP server for dashboard                    |
+| **Data Store**    | PostgreSQL + HikariCP   | Data persistence and connection pooling      |
+| **Monitoring**    | SLF4J + Logback         | Structured logging and observability         |
 
 ---
 

@@ -1,6 +1,6 @@
 # 🚀 Distributed SQL Query Engine - Project Portfolio
 
-> **A High-Performance Distributed SQL Query Engine Built in Rust**  
+> **A High-Performance Distributed SQL Query Engine Built in Java**  
 > _Demonstrating Advanced Distributed Systems, Database Engineering, and Backend Services Development_
 
 ## 🎯 **Project Overview**
@@ -11,7 +11,7 @@ This project demonstrates core competencies essential for modern software engine
 
 ## 📋 Project Overview
 
-**Distributed SQL Query Engine** is a distributed database system prototype that demonstrates SQL query processing across multiple worker nodes. Built entirely in Rust, it showcases distributed systems concepts, gRPC communication, and microservices architecture patterns.
+**Distributed SQL Query Engine** is a distributed database system prototype that demonstrates SQL query processing across multiple worker nodes. Built entirely in Java, it showcases distributed systems concepts, gRPC communication, and microservices architecture patterns.
 
 ### 🎯 **Key Achievements**
 
@@ -62,16 +62,16 @@ graph TB
 
 ### Core Technologies
 
-| **Category**        | **Technology**          | **Purpose**                                     | **Industry Relevance**                  |
-| ------------------- | ----------------------- | ----------------------------------------------- | --------------------------------------- |
-| **Language**        | Rust 1.70+              | Systems programming, memory safety, performance | Backend services development            |
-| **Async Runtime**   | Tokio                   | High-performance async I/O                      | Distributed infrastructure              |
-| **Communication**   | gRPC + Protocol Buffers | Inter-service communication                     | Microservices architecture              |
-| **SQL Parsing**     | nom 7.1                 | Parser combinator library                       | Database internals and query processing |
-| **Data Processing** | CSV, Serde              | Data serialization and processing               | Data governance and processing          |
-| **Web Framework**   | Warp                    | HTTP server for visualizer                      | Customer-facing product interfaces      |
-| **Testing**         | Tokio-test              | Async testing framework                         | Production system reliability           |
-| **Monitoring**      | Tracing                 | Structured logging and observability            | System observability and debugging      |
+| **Category**        | **Technology**          | **Purpose**                                 | **Industry Relevance**                  |
+| ------------------- | ----------------------- | ------------------------------------------- | --------------------------------------- |
+| **Language**        | Java 17+                | Enterprise-grade backend development        | Backend services development            |
+| **Framework**       | Spring Boot 3.2         | Microservices and web application framework | Distributed infrastructure              |
+| **Communication**   | gRPC + Protocol Buffers | Inter-service communication                 | Microservices architecture              |
+| **SQL Parsing**     | JSQLParser 4.7          | SQL parser and analyzer                     | Database internals and query processing |
+| **Data Processing** | HikariCP, PostgreSQL    | Data persistence and connection pooling     | Data governance and processing          |
+| **Web Framework**   | React 18 + TypeScript   | Frontend visualizer and dashboard           | Customer-facing product interfaces      |
+| **Testing**         | JUnit 5                 | Unit and integration testing framework      | Production system reliability           |
+| **Monitoring**      | SLF4J + Logback         | Structured logging and observability        | System observability and debugging      |
 
 ---
 
@@ -152,7 +152,7 @@ graph TB
 ### **System Performance**
 
 - **Query Execution**: Sub-second response times for mock queries
-- **Memory Usage**: Efficient memory management with Rust's ownership system
+- **Memory Usage**: Efficient memory management with Java's garbage collection and pooling
 - **Latency**: <100ms for typical query processing
 - **Scalability**: Horizontal scaling with additional worker nodes
 - **Reliability**: Comprehensive error handling and fault tolerance
@@ -182,7 +182,7 @@ graph TB
 ### **Code Quality Metrics**
 
 - **Test Coverage**: >90% code coverage across all modules
-- **Static Analysis**: Rust compiler warnings and clippy lints
+- **Static Analysis**: Java compiler warnings and Maven checks
 - **Documentation**: Comprehensive inline documentation and examples
 - **Error Handling**: Graceful error handling with detailed error messages
 - **Performance Profiling**: Continuous performance monitoring and optimization
@@ -195,14 +195,15 @@ graph TB
 
 ```bash
 # Prerequisites
-- Rust 1.70+ (latest stable)
+- Java 17+ (latest stable)
+- Maven 3.6+
 - Protocol Buffers compiler (protoc)
-- Cargo package manager
+- PostgreSQL 14+
 
 # Quick Start
 git clone <repository-url>
 cd Distributed-SQL-Query-Engine
-cargo build --release
+mvn clean compile
 
 # Start System
 ./scripts/start_system.sh
@@ -264,7 +265,7 @@ http://localhost:8080
 
 ### **Programming Languages & Technologies**
 
-- **Rust**: Systems programming with memory safety and performance optimization
+- **Java**: Enterprise-grade systems programming with Spring framework
 - **SQL**: Complete SQL parser and query engine implementation
 - **Protocol Buffers**: Efficient serialization for inter-service communication
 - **Web Technologies**: Full-stack development with real-time features
@@ -358,4 +359,4 @@ This project represents a strong foundation for contributing to enterprise data 
 
 ---
 
-_Built with ❤️ using Rust, demonstrating the power of modern backend services development and distributed systems engineering for data cloud platforms._
+_Built with ❤️ using Java and Spring, demonstrating the power of modern backend services development and distributed systems engineering for data cloud platforms._
