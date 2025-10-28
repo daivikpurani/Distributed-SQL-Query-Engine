@@ -17,6 +17,9 @@ Thumbs.db
 logs/
 *.log
 
+# Personal posts and social media content
+posts/
+
 # Node modules (for React frontend)
 node_modules/
 
