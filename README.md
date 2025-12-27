@@ -2,7 +2,7 @@
 
 A production-grade distributed SQL query engine built with Java, demonstrating expertise in distributed systems, microservices architecture, and modern backend technologies. The system features distributed query execution, data sharding, real-time monitoring, and an interactive React-based visualization dashboard.
 
-## 🚀 Features
+##  Features
 
 ### Core Functionality
 
@@ -19,7 +19,7 @@ A production-grade distributed SQL query engine built with Java, demonstrating e
 - **Communication**: gRPC for inter-service communication, WebSocket for real-time updates
 - **Database**: PostgreSQL with connection pooling and shard-aware queries
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Java 17 or higher
 - Maven 3.6+
@@ -27,7 +27,7 @@ A production-grade distributed SQL query engine built with Java, demonstrating e
 - Node.js 18+ (for frontend)
 - npm or yarn
 
-## 🛠️ Installation & Setup
+## Installation & Setup
 
 ### 1. Database Setup
 
@@ -88,7 +88,7 @@ cd visualizer-frontend
 npm run dev
 ```
 
-## 🎯 Usage
+## Usage
 
 ### CLI Client
 
@@ -114,7 +114,7 @@ Open `http://localhost:5173` to access the interactive visualization dashboard w
 - **Performance**: Live metrics, charts, and worker utilization
 - **Demo**: Interactive demonstrations of distributed systems concepts
 
-## 📊 Architecture
+## Architecture
 
 ### System Components
 
@@ -156,7 +156,7 @@ Open `http://localhost:5173` to access the interactive visualization dashboard w
 - **Range-based**: Distributes data based on value ranges for optimized range queries
 - **Round-robin**: Simple round-robin distribution for uniform workloads
 
-## 🔧 Configuration
+## Configuration
 
 ### Database Configuration
 
@@ -175,7 +175,7 @@ Each worker connects to its own PostgreSQL database:
 - Visualizer Backend: `8080`
 - Visualizer Frontend: `5173`
 
-## 📈 Performance
+## Performance
 
 ### Benchmarks
 
@@ -193,7 +193,7 @@ Each worker connects to its own PostgreSQL database:
 - Efficient gRPC communication
 - Real-time monitoring and metrics
 
-## 🧪 Testing
+## Testing
 
 ### Sample Queries
 
@@ -226,7 +226,7 @@ The system includes sample data:
 - **Orders**: 32 orders with products and amounts
 - **Products**: 15 products across different categories
 
-## 🚀 Deployment
+## Deployment
 
 ### Local Development
 
@@ -247,7 +247,7 @@ cd visualizer-frontend && npm run dev
 - Configure load balancing for multiple coordinators
 - Set up backup and recovery procedures
 
-## 📚 API Documentation
+## API Documentation
 
 ### REST API Endpoints
 
@@ -262,7 +262,7 @@ cd visualizer-frontend && npm run dev
 - `/topic/metrics` - Performance metrics updates
 - `/topic/query-execution` - Query execution progress
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -270,11 +270,11 @@ cd visualizer-frontend && npm run dev
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built with Java and the Spring ecosystem
 - Inspired by distributed database systems like Presto, SparkSQL, and modern cloud data platforms
