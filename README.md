@@ -1,286 +1,149 @@
 # Distributed SQL Query Engine
 
-A distributed SQL query engine built with Java, demonstrating expertise in distributed systems, microservices architecture, and modern backend technologies. The system features distributed query execution, data sharding, real-time monitoring, and an interactive React-based visualization dashboard.
+A distributed SQL query engine I've been building as a hands-on ramp-up project to better understand how modern databases plan and execute queries across multiple nodes.
 
-##  Features
+This project is intentionally not a full production database. The goal is to learn by building: take real design patterns from distributed query engines, implement them end to end, and understand where complexity actually comes from.
 
-### Core Functionality
+## Why I built this
 
-- **Distributed Query Execution**: Parallel query processing across multiple worker nodes
-- **Data Sharding**: Hash-based and range-based data distribution strategies
-- **SQL Support**: SELECT, JOIN, WHERE, GROUP BY, and aggregation operations
-- **Fault Tolerance**: Health monitoring, failure detection, and automatic recovery
-- **Real-time Monitoring**: Live system metrics and performance visualization
+Ahead of my internship on time-series databases, I wanted a deeper, practical understanding of:
 
-### Technology Stack
+- How SQL queries are parsed, planned, and broken into distributed execution units
+- How coordinators and workers interact under partial failure
+- How sharding choices affect correctness and performance
+- Where bottlenecks emerge in real distributed execution paths
 
-- **Backend**: Java 17, Spring Boot, gRPC, Protocol Buffers, PostgreSQL, HikariCP
-- **Frontend**: React 18, TypeScript, TailwindCSS, Recharts, WebSocket
-- **Communication**: gRPC for inter-service communication, WebSocket for real-time updates
-- **Database**: PostgreSQL with connection pooling and shard-aware queries
+Rather than reading papers in isolation, I chose to build a working system and iterate on it.
 
-## Prerequisites
+## System Overview
 
-- Java 17 or higher
-- Maven 3.6+
-- PostgreSQL 14+
-- Node.js 18+ (for frontend)
-- npm or yarn
+The engine follows a coordinator–worker architecture.
 
-## Installation & Setup
+- A coordinator node handles SQL parsing, planning, shard selection, and result aggregation
+- Worker nodes execute query fragments against local PostgreSQL shards
+- All inter-node communication uses gRPC
 
-### 1. Database Setup
-
-```bash
-# Start PostgreSQL (if not running)
-brew services start postgresql  # macOS
-# or
-sudo systemctl start postgresql  # Linux
-
-# Create databases for workers
-psql -U postgres -f scripts/init_databases.sql
-
-# Create tables and load sample data for each worker
-psql -U postgres -d worker1_db -f scripts/create_schema.sql
-psql -U postgres -d worker1_db -f scripts/load_sample_data.sql
-
-psql -U postgres -d worker2_db -f scripts/create_schema.sql
-psql -U postgres -d worker2_db -f scripts/load_sample_data.sql
-
-psql -U postgres -d worker3_db -f scripts/create_schema.sql
-psql -U postgres -d worker3_db -f scripts/load_sample_data.sql
-```
-
-### 2. Build the Project
-
-```bash
-# Build all modules
-mvn clean compile
-
-# Generate Protocol Buffer classes
-mvn protobuf:compile
-```
-
-### 3. Start the System
-
-```bash
-# Start all components (coordinator + 3 workers)
-./scripts/start_system.sh
-
-# Or start components individually:
-# Coordinator
-mvn exec:java -pl coordinator
-
-# Workers (in separate terminals)
-mvn exec:java -pl worker -Dexec.args="--worker-id worker1 --port 50052 --db-url jdbc:postgresql://localhost:5432/worker1_db --db-user postgres --db-password postgres"
-mvn exec:java -pl worker -Dexec.args="--worker-id worker2 --port 50053 --db-url jdbc:postgresql://localhost:5432/worker2_db --db-user postgres --db-password postgres"
-mvn exec:java -pl worker -Dexec.args="--worker-id worker3 --port 50054 --db-url jdbc:postgresql://localhost:5432/worker3_db --db-user postgres --db-password postgres"
-```
-
-### 4. Start the Visualizer
-
-```bash
-# Backend (Spring Boot)
-mvn spring-boot:run -pl visualizer-backend
-
-# Frontend (React) - in a new terminal
-cd visualizer-frontend
-npm run dev
-```
-
-## Usage
-
-### CLI Client
-
-```bash
-# Start the SQL client
-mvn exec:java -pl client
-
-# Available commands:
-sql> SELECT name, age FROM users WHERE age > 30
-sql> SELECT COUNT(*) FROM users
-sql> SELECT u.name, o.order_id FROM users u JOIN orders o ON u.user_id = o.user_id
-sql> status  # Show system status
-sql> help    # Show help
-sql> exit    # Exit client
-```
-
-### Web Dashboard
-
-Open `http://localhost:5173` to access the interactive visualization dashboard with:
-
-- **Architecture View**: Real-time system component status
-- **Query Flow**: Interactive query execution with step-by-step visualization
-- **Performance**: Live metrics, charts, and worker utilization
-- **Demo**: Interactive demonstrations of distributed systems concepts
-
-## Architecture
-
-### System Components
+Each worker owns its own database shard, keeping execution simple and explicit.
 
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Coordinator    │    │     Worker 1     │    │     Worker 2     │
-│                 │    │                 │    │                 │
-│ • SQL Parser    │◄──►│ • Query Executor│    │ • Query Executor│
-│ • Query Planner │    │ • Data Store    │    │ • Data Store    │
-│ • Shard Manager │    │ • PostgreSQL    │    │ • PostgreSQL    │
-│ • gRPC Server   │    │ • gRPC Server   │    │ • gRPC Server   │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         └───────────────────────┼───────────────────────┘
-                                 │
-                    ┌─────────────────┐
-                    │     Worker 3     │
-                    │                 │
-                    │ • Query Executor│
-                    │ • Data Store    │
-                    │ • PostgreSQL    │
-                    │ • gRPC Server   │
-                    └─────────────────┘
+Client
+  |
+  v
+Coordinator
+  |── gRPC ──> Worker 1 (Postgres shard)
+  |── gRPC ──> Worker 2 (Postgres shard)
+  |── gRPC ──> Worker 3 (Postgres shard)
 ```
 
-### Data Flow
+## Query Execution Flow
 
-1. **Query Reception**: Client sends SQL query to coordinator
-2. **Parsing**: SQL parser extracts query components (SELECT, FROM, WHERE, JOIN)
-3. **Planning**: Query planner creates execution plan with shard-aware optimization
-4. **Distribution**: Coordinator distributes query tasks to relevant workers
-5. **Execution**: Workers execute queries on their local PostgreSQL shards
-6. **Aggregation**: Coordinator aggregates results from all workers
-7. **Response**: Final results returned to client
+- Client submits a SQL query to the coordinator
+- The coordinator parses the query and builds a logical plan
+- The planner identifies relevant shards and generates per-worker tasks
+- Tasks are dispatched to workers over gRPC
+- Workers execute queries locally and stream partial results back
+- The coordinator aggregates results and returns the final response
 
-### Sharding Strategy
+This flow mirrors how many real distributed query engines separate control and execution planes.
 
-- **Hash-based**: Distributes data using hash of shard key for even distribution
-- **Range-based**: Distributes data based on value ranges for optimized range queries
-- **Round-robin**: Simple round-robin distribution for uniform workloads
+## SQL Support
 
-## Configuration
+Supported query features are intentionally limited but practical:
 
-### Database Configuration
+- SELECT
+- WHERE filters
+- INNER JOINs
+- GROUP BY and aggregations
+- Basic ORDER BY
 
-Each worker connects to its own PostgreSQL database:
+The focus is on execution mechanics rather than full SQL compliance.
 
-- Worker 1: `worker1_db`
-- Worker 2: `worker2_db`
-- Worker 3: `worker3_db`
+## Sharding and Data Distribution
 
-### Port Configuration
+Each worker runs its own PostgreSQL instance.
 
-- Coordinator: `50051`
-- Worker 1: `50052`
-- Worker 2: `50053`
-- Worker 3: `50054`
-- Visualizer Backend: `8080`
-- Visualizer Frontend: `5173`
+Supported strategies:
 
-## Performance
+- Hash-based sharding for uniform distribution
+- Range-based sharding for range queries
+- Simple round-robin for experimentation
 
-### Benchmarks
+Shard awareness lives in the coordinator, while workers remain stateless with respect to global metadata.
 
-- **Query Latency**: < 100ms for simple queries
-- **Throughput**: 50+ queries/second
-- **Scalability**: Linear scaling with additional workers
-- **Memory Usage**: < 200MB per component
-- **CPU Usage**: < 10% during normal operation
+## Fault Handling
 
-### Optimization Features
+The system handles common failure scenarios encountered in distributed execution:
 
-- Connection pooling with HikariCP
-- Query plan optimization with predicate pushdown
-- Parallel execution across workers
-- Efficient gRPC communication
-- Real-time monitoring and metrics
+- Worker health tracking via heartbeats
+- Retry of query fragments on transient worker failures
+- Graceful handling when some shards are unavailable
 
-## Testing
+This is not a fully fault-tolerant database, but it exposes real coordination and recovery challenges.
 
-### Sample Queries
+## Observability and Debugging
 
-```sql
--- Simple SELECT
-SELECT name, age FROM users WHERE age > 30;
+To better understand system behavior, I added lightweight observability:
 
--- Aggregation
-SELECT COUNT(*) FROM users GROUP BY location;
+- Live worker health and utilization metrics
+- Query execution progress tracking
+- Optional visualization UI for inspecting query flow
 
--- JOIN query
-SELECT u.name, o.order_id, o.amount
-FROM users u
-JOIN orders o ON u.user_id = o.user_id;
+These tools were primarily used for learning and debugging, not as production monitoring.
 
--- Complex query
-SELECT p.category, COUNT(*) as product_count, AVG(p.price) as avg_price
-FROM products p
-JOIN orders o ON p.product_id = o.product_id
-WHERE o.order_date >= '2024-01-01'
-GROUP BY p.category
-ORDER BY product_count DESC;
-```
+## Tech Stack
 
-### Test Data
+Backend:
 
-The system includes sample data:
+- Java 17
+- Spring Boot
+- gRPC + Protocol Buffers
+- PostgreSQL (per-shard storage)
+- HikariCP
 
-- **Users**: 26 users with names, ages, emails, and locations
-- **Orders**: 32 orders with products and amounts
-- **Products**: 15 products across different categories
+Frontend (optional visualizer):
 
-## Deployment
+- React
+- TypeScript
+- WebSockets
 
-### Local Development
+## Running Locally
 
-```bash
-# Start all services
-./scripts/start_system.sh
+The system is designed to run locally with multiple worker processes.
 
-# Start visualizer
-mvn spring-boot:run -pl visualizer-backend &
-cd visualizer-frontend && npm run dev
-```
+High-level steps:
 
-### Production Considerations
+1. Start PostgreSQL and initialize shard databases
+2. Build Java modules
+3. Start coordinator and worker nodes
+4. (Optional) Start the visualization UI
 
-- Configure proper database credentials
-- Set up SSL/TLS for gRPC communication
-- Implement proper logging and monitoring
-- Configure load balancing for multiple coordinators
-- Set up backup and recovery procedures
+Scripts are provided under `scripts/` for convenience.
 
-## API Documentation
+## Key Takeaways
 
-### REST API Endpoints
+Building this system helped me internalize:
 
-- `GET /api/status` - Get system status
-- `POST /api/query` - Execute SQL query
-- `GET /api/metrics` - Get performance metrics
-- `GET /api/workers` - Get worker information
+- Why query planning and execution are tightly coupled in distributed systems
+- How partial failures complicate otherwise simple execution flows
+- Where coordination overhead dominates performance
+- How much complexity is hidden behind "simple" SQL queries
 
-### WebSocket Topics
+## What's Intentionally Out of Scope
 
-- `/topic/system-status` - Real-time system status updates
-- `/topic/metrics` - Performance metrics updates
-- `/topic/query-execution` - Query execution progress
+- Distributed transactions
+- Strong cross-shard consistency guarantees
+- Cost-based query optimization
+- Multi-coordinator consensus
 
-## Contributing
+These were consciously excluded to keep the project focused and learnable.
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## Future Work
 
-## License
+If extended further:
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- Partial aggregation pushdown
+- Smarter shard pruning
+- Backpressure-aware streaming
+- More realistic benchmarking harness
 
-## Acknowledgments
 
-- Built with Java and the Spring ecosystem
-- Inspired by distributed database systems like Presto, SparkSQL, and modern cloud data platforms
-- Designed for educational and demonstration purposes
-- Special thanks to the Java and React communities for excellent tooling and libraries
-
----
-
-**Built with Java** | **Distributed Systems Excellence** | **Real-time Visualization**
