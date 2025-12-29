@@ -1,6 +1,6 @@
 # Distributed SQL Query Engine
 
-A distributed SQL query engine I've been building as a hands-on ramp-up project to better understand how modern databases plan and execute queries across multiple nodes.
+A distributed SQL query engine I've been building as a hands-on project to better understand how modern databases plan and execute queries across multiple nodes.
 
 This project is intentionally not a full production database. The goal is to learn by building: take real design patterns from distributed query engines, implement them end to end, and understand where complexity actually comes from.
 
