@@ -1,10 +1,15 @@
 package com.distributed.sql.worker;
 
-import com.distributed.sql.common.models.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.distributed.sql.common.models.Condition;
+import com.distributed.sql.common.models.Operator;
+import com.distributed.sql.common.models.PlanNode;
+import com.distributed.sql.common.models.ResultSet;
+import com.distributed.sql.common.models.Row;
 import com.distributed.sql.common.utils.AppLogger;
 import com.distributed.sql.common.utils.Tracer;
-
-import java.util.List;
 
 /**
  * Query executor that executes plan nodes on local PostgreSQL shard
@@ -25,13 +30,33 @@ public class QueryExecutor {
         try {
             AppLogger.info("Executing query on worker {}: {}", workerId, sqlQuery);
 
+            long startTime = System.currentTimeMillis();
+
             // Execute the query using DataStore
-            java.sql.ResultSet sqlResultSet = dataStore.executeQuery(sqlQuery);
-            ResultSet resultSet = convertFromSqlResultSet(sqlResultSet);
+            List<Row> rows = dataStore.executeQuery(sqlQuery);
+
+            long executionTime = System.currentTimeMillis() - startTime;
+
+            // Create ResultSet from rows
+            ResultSet resultSet = new ResultSet();
+            resultSet.setQueryId("query_" + System.currentTimeMillis());
+            resultSet.setStatus("SUCCESS");
+            resultSet.setExecutionTimeMs(executionTime);
+            resultSet.setTotalRows(rows.size());
+            resultSet.setRows(rows);
+
+            // Extract columns from first row if available
+            if (!rows.isEmpty()) {
+                List<String> columns = new ArrayList<>();
+                for (int i = 0; i < rows.get(0).size(); i++) {
+                    columns.add("col_" + i);
+                }
+                resultSet.setColumns(columns);
+            }
 
             Tracer.addTimestamp("query_executed");
             AppLogger.info("Query executed successfully on worker {} in {}ms",
-                    workerId, resultSet.getExecutionTimeMs());
+                    workerId, executionTime);
 
             return resultSet;
 
@@ -84,16 +109,76 @@ public class QueryExecutor {
 
     private ResultSet executeScanNode(PlanNode planNode) {
         String tableName = planNode.getTableName();
-        String sqlQuery = String.format("SELECT * FROM %s", tableName);
 
-        ResultSet resultSet = convertFromSqlResultSet(dataStore.executeQuery(sqlQuery));
+        // Build WHERE clause from conditions
+        StringBuilder sqlQuery = new StringBuilder("SELECT ");
+
+        // Add columns or *
+        if (planNode.getColumns().isEmpty()) {
+            sqlQuery.append("*");
+        } else {
+            for (int i = 0; i < planNode.getColumns().size(); i++) {
+                if (i > 0)
+                    sqlQuery.append(", ");
+                sqlQuery.append(planNode.getColumns().get(i));
+            }
+        }
+
+        sqlQuery.append(" FROM ").append(tableName);
+
+        // Add WHERE clause
+        if (!planNode.getConditions().isEmpty()) {
+            sqlQuery.append(" WHERE ");
+            for (int i = 0; i < planNode.getConditions().size(); i++) {
+                if (i > 0)
+                    sqlQuery.append(" AND ");
+
+                Condition condition = planNode.getConditions().get(i);
+                sqlQuery.append(condition.getColumn())
+                        .append(" ")
+                        .append(mapOperatorToString(condition.getOperator()))
+                        .append(" '")
+                        .append(condition.getValue())
+                        .append("'");
+            }
+        }
+
+        // Execute query
+        ResultSet resultSet = new ResultSet();
         resultSet.setQueryId("scan_" + planNode.getNodeId());
+
+        try {
+            List<Row> rows = dataStore.executeQuery(sqlQuery.toString());
+            resultSet.setRows(rows);
+            resultSet.setTotalRows(rows.size());
+            resultSet.setStatus("COMPLETED");
+
+            // Extract columns based on SELECT clause
+            if (!rows.isEmpty()) {
+                if (planNode.getColumns().isEmpty() || planNode.getColumns().contains("*")) {
+                    // For now, use numeric indices
+                    List<String> columns = new ArrayList<>();
+                    for (int i = 0; i < rows.get(0).size(); i++) {
+                        columns.add("col_" + i);
+                    }
+                    resultSet.setColumns(columns);
+                } else {
+                    resultSet.setColumns(new ArrayList<>(planNode.getColumns()));
+                }
+            }
+
+        } catch (Exception e) {
+            AppLogger.error("Error executing scan node", e);
+            resultSet.setStatus("FAILED");
+            resultSet.setTotalRows(0);
+        }
 
         return resultSet;
     }
 
     private ResultSet executeFilterNode(PlanNode planNode) {
-        // For simplicity, execute the filter as part of the scan
+        // Filtering is handled by executeScanNode as part of WHERE clause
+        // This method delegates to scan with conditions
         String tableName = planNode.getTableName();
         StringBuilder sqlQuery = new StringBuilder("SELECT * FROM ").append(tableName);
 
@@ -113,8 +198,19 @@ public class QueryExecutor {
             }
         }
 
-        ResultSet resultSet = convertFromSqlResultSet(dataStore.executeQuery(sqlQuery.toString()));
+        ResultSet resultSet = new ResultSet();
         resultSet.setQueryId("filter_" + planNode.getNodeId());
+
+        try {
+            List<Row> rows = dataStore.executeQuery(sqlQuery.toString());
+            resultSet.setRows(rows);
+            resultSet.setTotalRows(rows.size());
+            resultSet.setStatus("COMPLETED");
+        } catch (Exception e) {
+            AppLogger.error("Error executing filter node", e);
+            resultSet.setStatus("FAILED");
+            resultSet.setTotalRows(0);
+        }
 
         return resultSet;
     }
@@ -136,8 +232,20 @@ public class QueryExecutor {
 
         sqlQuery.append(" FROM ").append(tableName);
 
-        ResultSet resultSet = convertFromSqlResultSet(dataStore.executeQuery(sqlQuery.toString()));
+        ResultSet resultSet = new ResultSet();
         resultSet.setQueryId("project_" + planNode.getNodeId());
+
+        try {
+            List<Row> rows = dataStore.executeQuery(sqlQuery.toString());
+            resultSet.setRows(rows);
+            resultSet.setTotalRows(rows.size());
+            resultSet.setStatus("COMPLETED");
+            resultSet.setColumns(new ArrayList<>(planNode.getColumns()));
+        } catch (Exception e) {
+            AppLogger.error("Error executing project node", e);
+            resultSet.setStatus("FAILED");
+            resultSet.setTotalRows(0);
+        }
 
         return resultSet;
     }
@@ -201,22 +309,4 @@ public class QueryExecutor {
         return resultSet;
     }
 
-    private ResultSet convertFromSqlResultSet(java.sql.ResultSet sqlResultSet) {
-        // For demo purposes, return mock data since we're not actually executing SQL
-        // In a real implementation, this would convert java.sql.ResultSet to our
-        // ResultSet
-        ResultSet resultSet = new ResultSet();
-        resultSet.setQueryId("query_" + System.currentTimeMillis());
-        resultSet.setStatus("SUCCESS");
-        resultSet.setExecutionTimeMs(150);
-        resultSet.setTotalRows(3);
-
-        // Add mock columns and rows
-        resultSet.setColumns(List.of("id", "name", "value"));
-        resultSet.addRow(new Row(List.of("1", "Sample Data 1", "100")));
-        resultSet.addRow(new Row(List.of("2", "Sample Data 2", "200")));
-        resultSet.addRow(new Row(List.of("3", "Sample Data 3", "300")));
-
-        return resultSet;
-    }
 }

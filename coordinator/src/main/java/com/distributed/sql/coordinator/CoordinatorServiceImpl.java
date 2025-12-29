@@ -1,19 +1,33 @@
 package com.distributed.sql.coordinator;
 
-import com.distributed.sql.common.models.*;
-import com.distributed.sql.common.proto.CoordinatorServiceGrpc;
-import com.distributed.sql.common.proto.QueryProto.*;
-import com.distributed.sql.common.utils.AppLogger;
-import com.distributed.sql.common.utils.Tracer;
-import io.grpc.stub.StreamObserver;
-
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import com.distributed.sql.common.models.Query;
+import com.distributed.sql.common.proto.CoordinatorServiceGrpc;
+import com.distributed.sql.common.proto.QueryProto.ComponentStatus;
+import com.distributed.sql.common.proto.QueryProto.ExecuteQueryRequest;
+import com.distributed.sql.common.proto.QueryProto.ExecuteQueryResponse;
+import com.distributed.sql.common.proto.QueryProto.GetSystemStatusRequest;
+import com.distributed.sql.common.proto.QueryProto.GetSystemStatusResponse;
+import com.distributed.sql.common.proto.QueryProto.HeartbeatRequest;
+import com.distributed.sql.common.proto.QueryProto.HeartbeatResponse;
+import com.distributed.sql.common.proto.QueryProto.QueryResult;
+import com.distributed.sql.common.proto.QueryProto.QueryStatus;
+import com.distributed.sql.common.proto.QueryProto.RegisterWorkerRequest;
+import com.distributed.sql.common.proto.QueryProto.RegisterWorkerResponse;
+import com.distributed.sql.common.proto.QueryProto.SystemStatus;
+import com.distributed.sql.common.utils.AppLogger;
+import com.distributed.sql.common.utils.Tracer;
+
+import io.grpc.stub.StreamObserver;
 
 /**
  * Coordinator gRPC service implementation
@@ -119,6 +133,119 @@ public class CoordinatorServiceImpl extends CoordinatorServiceGrpc.CoordinatorSe
     }
 
     private QueryResult executeQueryAcrossWorkers(Query query, QueryPlan plan) {
+        return executeWithRetry(query, plan.getWorkerIds(), 3);
+    }
+
+    /**
+     * Execute query with retry logic for fault tolerance.
+     * If a worker fails, it will retry up to maxRetries times.
+     * 
+     * Implemented for Priority 1: Fault Tolerance
+     * 
+     * Strategy:
+     * - Filter out unhealthy workers before each attempt
+     * - Retry up to 3 times (configurable)
+     * - 30-second timeout per worker to prevent hanging
+     * - Automatic worker removal on failure
+     * - Supports partial results when some workers succeed
+     * 
+     * Why 3 retries?
+     * - First retry handles transient network glitches
+     * - Second retry handles worker restart scenarios
+     * - Third retry is a safety net before giving up
+     * - Trade-off: More retries = better reliability but slower failure detection
+     * 
+     * Why 30-second timeout?
+     * - Prevents one slow worker from blocking entire query
+     * - 30s is long enough for complex queries, short enough to fail fast
+     * - Based on observation: Most queries complete in < 1s
+     * 
+     * @param query      The query to execute
+     * @param workerIds  List of worker IDs to execute the query on
+     * @param maxRetries Maximum number of retries before giving up
+     * @return Aggregated query result
+     */
+    private QueryResult executeWithRetry(Query query, List<String> workerIds, int maxRetries) {
+        List<QueryResult> results = new ArrayList<>();
+        List<String> remainingWorkers = new ArrayList<>(workerIds);
+
+        for (int attempt = 0; attempt < maxRetries; attempt++) {
+            if (attempt > 0) {
+                AppLogger.warn("Retry attempt {} for query {}", attempt, query.getQueryId());
+            }
+
+            // Filter out unhealthy workers
+            remainingWorkers = remainingWorkers.stream()
+                    .filter(workerId -> shardManager.isWorkerHealthy(workerId))
+                    .collect(java.util.stream.Collectors.toList());
+
+            if (remainingWorkers.isEmpty()) {
+                AppLogger.error("No healthy workers available for query {}", query.getQueryId());
+                throw new RuntimeException("No healthy workers available");
+            }
+
+            List<CompletableFuture<QueryResult>> futures = new ArrayList<>();
+
+            // Execute query on each worker in parallel
+            for (String workerId : remainingWorkers) {
+                CompletableFuture<QueryResult> future = CompletableFuture.supplyAsync(() -> {
+                    try {
+                        WorkerClient client = workerClients.get(workerId);
+                        if (client == null) {
+                            AppLogger.warn("No client found for worker: {}", workerId);
+                            shardManager.removeWorker(workerId);
+                            throw new RuntimeException("Worker not found: " + workerId);
+                        }
+
+                        if (!client.healthCheck()) {
+                            AppLogger.warn("Worker {} failed health check", workerId);
+                            shardManager.removeWorker(workerId);
+                            throw new RuntimeException("Worker health check failed: " + workerId);
+                        }
+
+                        return client.executeQuery(query.getSql());
+
+                    } catch (Exception e) {
+                        AppLogger.error("Error executing query on worker: " + workerId, e);
+                        shardManager.removeWorker(workerId);
+                        throw new RuntimeException("Worker execution failed: " + workerId, e);
+                    }
+                }, executorService);
+
+                futures.add(future);
+            }
+
+            // Wait for all workers to complete
+            results.clear();
+            boolean allSucceeded = true;
+
+            for (CompletableFuture<QueryResult> future : futures) {
+                try {
+                    QueryResult result = future.get(30, java.util.concurrent.TimeUnit.SECONDS);
+                    results.add(result);
+                } catch (Exception e) {
+                    AppLogger.error("Error getting result from worker - will retry", e);
+                    allSucceeded = false;
+                }
+            }
+
+            if (allSucceeded && !results.isEmpty()) {
+                return aggregateResults(query.getQueryId(), query.getSql(), results);
+            }
+        }
+
+        // If we get here, we've exhausted all retries
+        AppLogger.error("Failed to execute query after {} retries", maxRetries);
+
+        if (results.isEmpty()) {
+            throw new RuntimeException("Query failed on all workers after " + maxRetries + " retries");
+        }
+
+        // Return partial results if we have any
+        return aggregateResults(query.getQueryId(), query.getSql(), results);
+    }
+
+    private QueryResult executeQueryAcrossWorkersOriginal(Query query, QueryPlan plan) {
         List<String> workerIds = plan.getWorkerIds();
         List<CompletableFuture<QueryResult>> futures = new ArrayList<>();
 

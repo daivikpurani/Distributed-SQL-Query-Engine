@@ -46,4 +46,8 @@ public class Row {
     public void setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
     }
+
+    public int size() {
+        return values.size();
+    }
 }

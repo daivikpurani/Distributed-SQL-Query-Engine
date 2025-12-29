@@ -1,18 +1,26 @@
 package com.distributed.sql.worker;
 
-import com.distributed.sql.common.models.*;
-import com.distributed.sql.common.proto.WorkerServiceGrpc;
-import com.distributed.sql.common.proto.QueryProto.*;
-import com.distributed.sql.common.utils.AppLogger;
-import com.distributed.sql.common.utils.Tracer;
-import io.grpc.stub.StreamObserver;
-
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import com.distributed.sql.common.models.ResultSet;
+import com.distributed.sql.common.proto.QueryProto.ExecuteQueryRequest;
+import com.distributed.sql.common.proto.QueryProto.ExecuteQueryResponse;
+import com.distributed.sql.common.proto.QueryProto.GetWorkerStatusRequest;
+import com.distributed.sql.common.proto.QueryProto.GetWorkerStatusResponse;
+import com.distributed.sql.common.proto.QueryProto.HealthRequest;
+import com.distributed.sql.common.proto.QueryProto.HealthResponse;
+import com.distributed.sql.common.proto.QueryProto.QueryResult;
+import com.distributed.sql.common.proto.QueryProto.QueryStatus;
+import com.distributed.sql.common.proto.QueryProto.WorkerStatus;
+import com.distributed.sql.common.proto.WorkerServiceGrpc;
+import com.distributed.sql.common.utils.AppLogger;
+import com.distributed.sql.common.utils.Tracer;
+
+import io.grpc.stub.StreamObserver;
 
 /**
  * Worker gRPC service implementation
@@ -143,6 +151,9 @@ public class WorkerServiceImpl extends WorkerServiceGrpc.WorkerServiceImplBase {
     public void getWorkerStatus(GetWorkerStatusRequest request,
             StreamObserver<GetWorkerStatusResponse> responseObserver) {
         try {
+            // Log connection pool metrics
+            AppLogger.info("Worker {} pool metrics: {}", workerId, dataStore.getPoolMetrics());
+
             WorkerStatus status = WorkerStatus.newBuilder()
                     .setWorkerId(workerId)
                     .setStatus("HEALTHY")
@@ -162,7 +173,7 @@ public class WorkerServiceImpl extends WorkerServiceGrpc.WorkerServiceImplBase {
             GetWorkerStatusResponse response = GetWorkerStatusResponse.newBuilder()
                     .setSuccess(true)
                     .setStatus(status)
-                    .setMessage("Worker status retrieved successfully")
+                    .setMessage("Worker status retrieved successfully. Pool: " + dataStore.getPoolMetrics())
                     .build();
 
             responseObserver.onNext(response);

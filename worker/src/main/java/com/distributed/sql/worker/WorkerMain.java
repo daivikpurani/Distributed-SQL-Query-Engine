@@ -1,15 +1,17 @@
 package com.distributed.sql.worker;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 import com.distributed.sql.common.proto.CoordinatorServiceGrpc;
-import com.distributed.sql.common.proto.QueryProto.*;
+import com.distributed.sql.common.proto.QueryProto.RegisterWorkerRequest;
+import com.distributed.sql.common.proto.QueryProto.RegisterWorkerResponse;
 import com.distributed.sql.common.utils.AppLogger;
+
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Main class to start a worker node
@@ -26,6 +28,7 @@ public class WorkerMain {
     private WorkerServiceImpl workerService;
     private DataStore dataStore;
     private QueryExecutor queryExecutor;
+    private ConnectionPoolMonitor poolMonitor;
     private ManagedChannel coordinatorChannel;
 
     public static void main(String[] args) {
@@ -77,6 +80,10 @@ public class WorkerMain {
 
         // Initialize QueryExecutor
         queryExecutor = new QueryExecutor(workerId, dataStore);
+
+        // Initialize ConnectionPoolMonitor
+        poolMonitor = new ConnectionPoolMonitor(workerId, dataStore);
+        poolMonitor.start();
 
         // Initialize WorkerService
         workerService = new WorkerServiceImpl(workerId, queryExecutor, dataStore);
@@ -152,6 +159,10 @@ public class WorkerMain {
                 AppLogger.warn("Coordinator channel did not terminate gracefully");
                 coordinatorChannel.shutdownNow();
             }
+        }
+
+        if (poolMonitor != null) {
+            poolMonitor.stop();
         }
 
         if (workerService != null) {
