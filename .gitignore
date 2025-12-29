@@ -3,6 +3,8 @@ target/
 
 # Archive directory (contains old Rust implementation)
 archive/
+**/rust-implementation/
+rust-implementation/
 
 # IDE files
 .vscode/
@@ -19,6 +21,11 @@ logs/
 
 # Personal posts and social media content
 posts/
+
+# Portfolio and pitch documents
+docs/portfolio/
+**/*portfolio*
+**/*pitch*
 
 # Node modules (for React frontend)
 node_modules/

@@ -1,6 +1,6 @@
 # Distributed SQL Query Engine
 
-A production-grade distributed SQL query engine built with Java, demonstrating expertise in distributed systems, microservices architecture, and modern backend technologies. The system features distributed query execution, data sharding, real-time monitoring, and an interactive React-based visualization dashboard.
+A distributed SQL query engine built with Java, demonstrating expertise in distributed systems, microservices architecture, and modern backend technologies. The system features distributed query execution, data sharding, real-time monitoring, and an interactive React-based visualization dashboard.
 
 ##  Features
 
